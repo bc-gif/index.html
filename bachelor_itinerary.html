@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Most Distinguished Bachelor Excursion</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=IM+Fell+English:ital@0;1&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5EDD6;
+    --aged: #EDE0C0;
+    --dark-brown: #2C1A0E;
+    --warm-brown: #6B3A2A;
+    --gold: #B8860B;
+    --light-gold: #D4A843;
+    --faded: #9B7B5A;
+    --ink: #1A0E06;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #3A2A1A;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+    font-family: 'IM Fell English', serif;
+  }
+
+  .edit-notice {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--gold);
+    color: var(--dark-brown);
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .edit-notice:hover { background: var(--light-gold); }
+
+  .print-btn {
+    position: fixed;
+    top: 12px;
+    right: 20px;
+    background: var(--dark-brown);
+    color: var(--light-gold);
+    border: 1px solid var(--gold);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-family: 'Cinzel', serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.2s;
+  }
+  .print-btn:hover { background: var(--warm-brown); }
+
+  .page {
+    width: 8.5in;
+    min-height: 11in;
+    background: var(--cream);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    padding: 0.3in 0.35in;
+  }
+
+  /* Aged paper texture overlay */
+  .page::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      radial-gradient(ellipse at 20% 30%, rgba(180,140,80,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 70%, rgba(100,60,20,0.06) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Outer border */
+  .border-outer {
+    position: absolute;
+    inset: 0.2in;
+    border: 2px solid var(--gold);
+    pointer-events: none;
+    z-index: 10;
+  }
+  .border-inner {
+    position: absolute;
+    inset: 0.27in;
+    border: 0.5px solid var(--gold);
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Corner ornaments */
+  .corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    z-index: 11;
+    pointer-events: none;
+  }
+  .corner svg { width: 40px; height: 40px; }
+  .corner-tl { top: 0.18in; left: 0.18in; }
+  .corner-tr { top: 0.18in; right: 0.18in; transform: scaleX(-1); }
+  .corner-bl { bottom: 0.18in; left: 0.18in; transform: scaleY(-1); }
+  .corner-br { bottom: 0.18in; right: 0.18in; transform: scale(-1); }
+
+  .content {
+    position: relative;
+    z-index: 5;
+    height: 100%;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    padding: 0.05in 0 0.08in;
+  }
+
+  .top-rule {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .top-rule::before, .top-rule::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+  }
+  .top-rule span {
+    font-family: 'Cinzel', serif;
+    font-size: 7px;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  .main-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--dark-brown);
+    line-height: 1;
+    letter-spacing: 0.02em;
+  }
+
+  .subtitle {
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    color: var(--warm-brown);
+    letter-spacing: 0.18em;
+    margin: 4px 0;
+  }
+
+  .tagline {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 11px;
+    color: var(--faded);
+    margin: 2px 0 6px;
+  }
+
+  .date-bar {
+    background: var(--dark-brown);
+    color: var(--light-gold);
+    font-family: 'Cinzel', serif;
+    font-size: 9.5px;
+    letter-spacing: 0.2em;
+    padding: 4px 0;
+    margin: 0 0.4in;
+    border-top: 1px solid var(--gold);
+    border-bottom: 1px solid var(--gold);
+  }
+
+  /* GRID LAYOUT */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr 1px 1fr;
+    gap: 0;
+    margin-top: 8px;
+    height: calc(100% - 1.4in);
+  }
+
+  .divider-v {
+    background: linear-gradient(to bottom, transparent, var(--gold) 10%, var(--gold) 90%, transparent);
+    width: 1px;
+  }
+
+  .day-col {
+    padding: 0 10px;
+  }
+
+  .day-header {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .day-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark-brown);
+    display: block;
+  }
+
+  .day-date {
+    font-family: 'Cinzel', serif;
+    font-size: 7.5px;
+    color: var(--gold);
+    letter-spacing: 0.12em;
+    display: block;
+  }
+
+  .day-rule {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold), transparent);
+    margin: 4px 0 6px;
+  }
+
+  /* TIME BLOCKS */
+  .time-block {
+    margin-bottom: 7px;
+    position: relative;
+    padding-left: 10px;
+  }
+
+  .time-block::before {
+    content: '◆';
+    position: absolute;
+    left: 0;
+    top: 1px;
+    font-size: 6px;
+    color: var(--gold);
+    line-height: 1;
+  }
+
+  .time-label {
+    font-family: 'Cinzel', serif;
+    font-size: 7px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    display: block;
+    line-height: 1.2;
+  }
+
+  .block-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--dark-brown);
+    display: block;
+    line-height: 1.2;
+    margin-bottom: 2px;
+  }
+
+  .block-items {
+    list-style: none;
+    padding: 0;
+  }
+
+  .block-items li {
+    font-family: 'IM Fell English', serif;
+    font-size: 8px;
+    color: var(--warm-brown);
+    line-height: 1.35;
+    padding-left: 8px;
+    position: relative;
+    margin-bottom: 1px;
+  }
+
+  .block-items li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--faded);
+  }
+
+  .sub-rule {
+    height: 0.5px;
+    background: linear-gradient(to right, var(--aged), transparent);
+    margin: 5px 0;
+  }
+
+  /* TRIALS SECTION (bottom strip) */
+  .trials-section {
+    margin-top: 0;
+    border-top: 1px solid var(--gold);
+    padding-top: 5px;
+  }
+
+  .trials-header {
+    text-align: center;
+    font-family: 'Cinzel', serif;
+    font-size: 8px;
+    letter-spacing: 0.25em;
+    color: var(--dark-brown);
+    margin-bottom: 5px;
+  }
+  .trials-header::before, .trials-header::after { content: ' ✦ '; color: var(--gold); }
+
+  .trials-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 5px;
+  }
+
+  .trial-item {
+    text-align: center;
+    background: var(--aged);
+    border: 0.5px solid var(--gold);
+    border-radius: 2px;
+    padding: 4px 3px;
+  }
+
+  .trial-num {
+    font-family: 'Cinzel', serif;
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+
+  .trial-name {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 7.5px;
+    color: var(--dark-brown);
+    display: block;
+    line-height: 1.2;
+    margin: 1px 0;
+  }
+
+  .trial-desc {
+    font-family: 'IM Fell English', serif;
+    font-size: 6.8px;
+    color: var(--warm-brown);
+    line-height: 1.25;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    margin-top: 5px;
+    border-top: 1px solid var(--gold);
+    padding-top: 4px;
+  }
+
+  .footer-text {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 8px;
+    color: var(--faded);
+  }
+
+  /* Editable styles */
+  [contenteditable="true"] {
+    outline: none;
+    cursor: text;
+    border-radius: 2px;
+    transition: background 0.15s;
+  }
+  [contenteditable="true"]:hover {
+    background: rgba(184,134,11,0.08);
+  }
+  [contenteditable="true"]:focus {
+    background: rgba(184,134,11,0.12);
+    box-shadow: 0 0 0 1px rgba(184,134,11,0.3);
+  }
+
+  /* PRINT */
+  @media print {
+    body { background: white; padding: 0; }
+    .edit-notice, .print-btn { display: none !important; }
+    .page {
+      width: 8.5in;
+      min-height: 11in;
+      box-shadow: none;
+      margin: 0;
+      padding: 0.3in 0.35in;
+    }
+    [contenteditable] { cursor: default; }
+    [contenteditable]:hover, [contenteditable]:focus {
+      background: transparent;
+      box-shadow: none;
+    }
+  }
+
+  @page { size: letter; margin: 0; }
+</style>
+</head>
+<body>
+
+<div class="edit-notice" onclick="alert('Click any text to edit it directly. Press Ctrl+P (or Cmd+P) to print.')">
+  ✎ &nbsp;Click any text to edit &nbsp;|&nbsp; Ctrl+P to print
+</div>
+
+<button class="print-btn" onclick="window.print()">⎙ Print / Save PDF</button>
+
+<div class="page">
+  <div class="border-outer"></div>
+  <div class="border-inner"></div>
+
+  <!-- Corner ornaments -->
+  <div class="corner corner-tl">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 4 L36 4 M4 4 L4 36" stroke="#B8860B" stroke-width="1.5"/>
+      <path d="M8 8 L28 8 M8 8 L8 28" stroke="#B8860B" stroke-width="0.5"/>
+      <circle cx="4" cy="4" r="2" fill="#B8860B"/>
+      <path d="M12 4 L4 12" stroke="#B8860B" stroke-width="0.5" opacity="0.5"/>
+    </svg>
+  </div>
+  <div class="corner corner-tr">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 4 L36 4 M4 4 L4 36" stroke="#B8860B" stroke-width="1.5"/>
+      <path d="M8 8 L28 8 M8 8 L8 28" stroke="#B8860B" stroke-width="0.5"/>
+      <circle cx="4" cy="4" r="2" fill="#B8860B"/>
+    </svg>
+  </div>
+  <div class="corner corner-bl">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 4 L36 4 M4 4 L4 36" stroke="#B8860B" stroke-width="1.5"/>
+      <path d="M8 8 L28 8 M8 8 L8 28" stroke="#B8860B" stroke-width="0.5"/>
+      <circle cx="4" cy="4" r="2" fill="#B8860B"/>
+    </svg>
+  </div>
+  <div class="corner corner-br">
+    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 4 L36 4 M4 4 L4 36" stroke="#B8860B" stroke-width="1.5"/>
+      <path d="M8 8 L28 8 M8 8 L8 28" stroke="#B8860B" stroke-width="0.5"/>
+      <circle cx="4" cy="4" r="2" fill="#B8860B"/>
+    </svg>
+  </div>
+
+  <div class="content">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="top-rule"><span>✦ &nbsp; EST. MMXXV &nbsp; ✦</span></div>
+      <div class="main-title" contenteditable="true">A Most Distinguished Bachelor Excursion</div>
+      <div class="tagline" contenteditable="true">Seven Gentlemen &nbsp;·&nbsp; One Groom &nbsp;·&nbsp; Zero Regrets Permitted</div>
+      <div class="date-bar" contenteditable="true">Austin, Texas &nbsp;✦&nbsp; February 19th – 22nd, 2025 &nbsp;✦&nbsp; 2801 Goodwin Avenue</div>
+    </div>
+
+    <!-- THREE COLUMN GRID -->
+    <div class="grid">
+
+      <!-- THURSDAY -->
+      <div class="day-col">
+        <div class="day-header">
+          <span class="day-name" contenteditable="true">Thursday</span>
+          <span class="day-date" contenteditable="true">February 19th — Arrival & Proper Provisioning</span>
+          <div class="day-rule"></div>
+        </div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">4:00 in the Afternoon</span>
+          <span class="block-title" contenteditable="true">Arrival at the Estate</span>
+          <ul class="block-items">
+            <li contenteditable="true">Bags deposited; chambers selected with deliberation</li>
+            <li contenteditable="true">Music commences at once — no silence suffered</li>
+            <li contenteditable="true">First libation poured within seven minutes (a standard of excellence)</li>
+            <li contenteditable="true">Group portrait captured whilst all appear respectable</li>
+          </ul>
+        </div>
+
+        <div class="sub-rule"></div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">6:00 in the Evening</span>
+          <span class="block-title" contenteditable="true">Strategic Supply Acquisition — H-E-B</span>
+          <ul class="block-items">
+            <li contenteditable="true">Breakfast taco provisions (non-negotiable)</li>
+            <li contenteditable="true">Steaks & burgers for Saturday's grill supremacy</li>
+            <li contenteditable="true">Beer in mathematically concerning quantities</li>
+            <li contenteditable="true">Spirits & mixers for "just one more" diplomacy</li>
+          </ul>
+        </div>
+
+        <div class="sub-rule"></div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">8:00 in the Evening</span>
+          <span class="block-title" contenteditable="true">Dinner — Loro Smokehouse</span>
+          <ul class="block-items">
+            <li contenteditable="true">Loro — Cocktails of deceptive strength</li>
+            <li contenteditable="true">Alt: ATX Cocina — Tequila decisions pending</li>
+          </ul>
+        </div>
+
+        <div class="sub-rule"></div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">Evening — Optional</span>
+          <span class="block-title" contenteditable="true">Rainey Street Stroll</span>
+          <ul class="block-items">
+            <li contenteditable="true">Half Step — craft cocktail persuasion</li>
+            <li contenteditable="true">Clive Bar — where pacing becomes theoretical</li>
+            <li contenteditable="true">Reminder: This evening is but a prelude</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="divider-v"></div>
+
+      <!-- FRIDAY -->
+      <div class="day-col">
+        <div class="day-header">
+          <span class="day-name" contenteditable="true">Friday</span>
+          <span class="day-date" contenteditable="true">February 20th — Golf, Grandeur & Manageable Chaos</span>
+          <div class="day-rule"></div>
+        </div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">9:00 in the Morning</span>
+          <span class="block-title" contenteditable="true">Breakfast at the Residence</span>
+          <ul class="block-items">
+            <li contenteditable="true">Tacos assembled with ceremony</li>
+            <li contenteditable="true">Hydration strongly encouraged</li>
+            <li contenteditable="true">Athletic confidence vastly overstated</li>
+          </ul>
+        </div>
+
+        <div class="sub-rule"></div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">11:30 in the Morning</span>
+          <span class="block-title" contenteditable="true">Tee Time — Riverside Golf Course</span>
+          <ul class="block-items">
+            <li contenteditable="true">The first lost ball sets the tone</li>
+            <li contenteditable="true">The Groom must attempt one heroic (ill-advised) shot</li>
+            <li contenteditable="true">Lowest performer buys the first round at dinner</li>
+          </ul>
+        </div>
+
+        <div class="sub-rule"></div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">4:00 in the Afternoon</span>
+          <span class="block-title" contenteditable="true">Return & Restoration</span>
+          <ul class="block-items">
+            <li contenteditable="true">Showers. Reset. Dignity partially reclaimed</li>
+            <li contenteditable="true">Pre-dinner beverages resume (theoretically in moderation)</li>
+          </ul>
+        </div>
+
+        <div class="sub-rule"></div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">7:30 in the Evening</span>
+          <span class="block-title" contenteditable="true">A Proper Supper — Select One Establishment</span>
+          <ul class="block-items">
+            <li contenteditable="true">Red Ash Italia — Italian steakhouse refinement</li>
+            <li contenteditable="true">Jacoby's — Texas comfort & strong pour strategy</li>
+            <li contenteditable="true">Jeffrey's — Old-school prestige selection</li>
+          </ul>
+        </div>
+
+        <div class="sub-rule"></div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">Evening — Choose Wisely</span>
+          <span class="block-title" contenteditable="true">Evening Pursuits</span>
+          <ul class="block-items">
+            <li contenteditable="true">High energy: Rainey St · Midnight Cowboy · Azul Rooftop</li>
+            <li contenteditable="true">Texas tradition: White Horse · Broken Spoke</li>
+            <li contenteditable="true">Rooftop & DJ: Summit · Superstition · The Cut ATX</li>
+            <li contenteditable="true">Wildcard: Comedy Mothership, should tickets permit</li>
+            <li contenteditable="true">Post-midnight tacos — considered mandatory</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="divider-v"></div>
+
+      <!-- SATURDAY -->
+      <div class="day-col">
+        <div class="day-header">
+          <span class="day-name" contenteditable="true">Saturday</span>
+          <span class="day-date" contenteditable="true">February 21st — Redemption & Culinary Dominance</span>
+          <div class="day-rule"></div>
+        </div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">9:00 in the Morning</span>
+          <span class="block-title" contenteditable="true">Morning Restoration</span>
+          <ul class="block-items">
+            <li contenteditable="true">Kerbey Lane Cafe — carbohydrates as medicine</li>
+            <li contenteditable="true">Alt: In-house if collective morale is delicate</li>
+          </ul>
+        </div>
+
+        <div class="sub-rule"></div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">10:30 in the Morning</span>
+          <span class="block-title" contenteditable="true">The Gentleman's Ascent</span>
+          <ul class="block-items">
+            <li contenteditable="true">Barton Creek Greenbelt → Sculpture Falls</li>
+            <li contenteditable="true">Optional cold plunge — spiritually cleansing</li>
+            <li contenteditable="true">Mount Bonnell — efficient climb, elite photograph</li>
+          </ul>
+        </div>
+
+        <div class="sub-rule"></div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">1:00 in the Afternoon</span>
+          <span class="block-title" contenteditable="true">Responsible Hydration</span>
+          <ul class="block-items">
+            <li contenteditable="true">Brewery stop (for electrolytes, allegedly)</li>
+            <li contenteditable="true">Valentina's Tex Mex BBQ — brisket transcendence</li>
+          </ul>
+        </div>
+
+        <div class="sub-rule"></div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">Afternoon — At the Estate</span>
+          <span class="block-title" contenteditable="true">Civilised Recreation</span>
+          <ul class="block-items">
+            <li contenteditable="true">Poker — fortunes made and lost with dignity</li>
+            <li contenteditable="true">Beer pong — competitive yet survivable</li>
+            <li contenteditable="true">One college anecdote escalates beyond all reason</li>
+          </ul>
+        </div>
+
+        <div class="sub-rule"></div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">5:30 in the Evening</span>
+          <span class="block-title" contenteditable="true">The Grill Ceremony</span>
+          <ul class="block-items">
+            <li contenteditable="true">Steaks & burgers prepared with great solemnity</li>
+            <li contenteditable="true">Sunset appreciated in companionable silence</li>
+            <li contenteditable="true">The Groom delivers remarks — or endures a roast</li>
+          </ul>
+        </div>
+
+        <div class="sub-rule"></div>
+
+        <div class="time-block">
+          <span class="time-label" contenteditable="true">Evening — Choose One's Fate</span>
+          <span class="block-title" contenteditable="true">The Final Act</span>
+          <ul class="block-items">
+            <li contenteditable="true">Second expedition downtown for resolute constitutions</li>
+            <li contenteditable="true">Or: cigars, cards & declarations of brotherhood</li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- /grid -->
+
+    <!-- GROOM'S TRIALS -->
+    <div class="trials-section">
+      <div class="trials-header" contenteditable="true">The Groom's Trials</div>
+      <div class="trials-grid">
+        <div class="trial-item">
+          <span class="trial-num">I.</span>
+          <span class="trial-name" contenteditable="true">The Mystery Shot</span>
+          <div class="trial-desc" contenteditable="true">Accept one "mystery" shot selected by collective discretion. Refusal not permitted.</div>
+        </div>
+        <div class="trial-item">
+          <span class="trial-num">II.</span>
+          <span class="trial-name" contenteditable="true">The Address</span>
+          <div class="trial-desc" contenteditable="true">Two-minute address on how he knew she was the one. Brevity required.</div>
+        </div>
+        <div class="trial-item">
+          <span class="trial-num">III.</span>
+          <span class="trial-name" contenteditable="true">The Golf Trial</span>
+          <div class="trial-desc" contenteditable="true">Win at least one hole. Excuses and weather are inadmissible as defense.</div>
+        </div>
+        <div class="trial-item">
+          <span class="trial-num">IV.</span>
+          <span class="trial-name" contenteditable="true">The Grill Command</span>
+          <div class="trial-desc" contenteditable="true">Command the grill for one item Saturday evening. Char acceptable; surrender is not.</div>
+        </div>
+        <div class="trial-item">
+          <span class="trial-num">V.</span>
+          <span class="trial-name" contenteditable="true">The Legend</span>
+          <div class="trial-desc" contenteditable="true">Recount one legendary college story in full detail. Gaps in memory unacceptable.</div>
+        </div>
+        <div class="trial-item">
+          <span class="trial-num">VI.</span>
+          <span class="trial-name" contenteditable="true">The Vigil</span>
+          <div class="trial-desc" contenteditable="true">Avoid being first to retire. The brotherhood watches. The brotherhood remembers.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+      <div class="footer-text" contenteditable="true">"A gentleman is simply a patient wolf — and this weekend, patience is entirely optional." &nbsp;✦&nbsp; Private & Confidential — For the Eyes of the Brotherhood Only</div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /page -->
+
+</body>
+</html>
